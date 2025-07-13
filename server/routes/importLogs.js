@@ -1,5 +1,5 @@
 const express = require("express");
-const ImportLog = require("./models/ImportLog");
+const ImportLog = require("../models/ImportLog");
 const router = express.Router();
 
 router.get("/", async (req, res) => {

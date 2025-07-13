@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
-const JobSchema = new mongoose.Schema({
+const jobSchema = new mongoose.Schema({
+  guid: { type: String, required: true, unique: true },
   title: String,
   link: String,
-  guid: { type: String, unique: true },
-  pubDate: Date,
   description: String,
+  pubDate: String,
 });
 
-module.exports = mongoose.model("Job", JobSchema);
+module.exports = mongoose.model("Job", jobSchema);

@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 const { importJobs } = require("../services/jobService");
-const ImportLog = require("./models/ImportLog");
+const ImportLog = require("../models/ImportLog");
 const connectDB = require("../config/db");
 
 const parseXML = async (url) => {

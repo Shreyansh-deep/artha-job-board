@@ -1,4 +1,4 @@
-const Job = require("./models/Job");
+const Job = require("../models/Job");
 
 const importJobs = async (jobList) => {
   let newJobs = 0;
@@ -6,19 +6,35 @@ const importJobs = async (jobList) => {
   let failedJobs = [];
 
   for (const job of jobList) {
+    // Extract guid value safely
+    const guidValue =
+      typeof job.guid?.[0] === "string"
+        ? job.guid[0]
+        : job.guid?.[0]?._ || "unknown";
+
     try {
-      const existing = await Job.findOne({ guid: job.guid[0] });
+      // Clean up fields from arrays → strings
+      const cleanedJob = {
+        guid: guidValue,
+        title: job.title?.[0] || "",
+        link: job.link?.[0] || "",
+        description: job.description?.[0] || "",
+        pubDate: job.pubDate?.[0] || "",
+        // Add more fields if needed
+      };
+
+      const existing = await Job.findOne({ guid: guidValue });
 
       if (existing) {
-        await Job.updateOne({ guid: job.guid[0] }, { $set: job });
+        await Job.updateOne({ guid: guidValue }, { $set: cleanedJob });
         updatedJobs++;
       } else {
-        await Job.create(job);
+        await Job.create(cleanedJob);
         newJobs++;
       }
     } catch (error) {
       failedJobs.push({
-        jobId: job.guid?.[0] || "unknown",
+        jobId: guidValue,
         reason: error.message,
       });
     }
