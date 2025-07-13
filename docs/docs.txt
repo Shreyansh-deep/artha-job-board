@@ -1,0 +1,63 @@
+🧑‍💻 Author
+
+Made by Shreyansh Deep for Artha Job Board Full Stack Assignment.
+
+```md
+# System Architecture – Artha Job Board
+
+---
+
+## 🧱 Components
+
+### 1. **Job Fetcher**
+- `jobs/fetchJobs.js`
+- Fetches XML feeds using `axios`
+- Parses to JSON using `xml2js`
+- Queues each job using BullMQ
+
+### 2. **Queue + Worker**
+- `queue.js` sets up BullMQ with Redis
+- `worker.js` listens on the queue
+- Each job is:
+  - Upserted into `jobs` collection
+  - Errors are tracked with jobId + reason
+- Summary logged in `import_logs`
+
+### 3. **MongoDB (Mongoose)**
+- `jobs`: stores raw job data (with guid)
+- `import_logs`: tracks each import run
+
+---
+
+🖥 Frontend (Next.js)
+
+/import-logs
+- Fetches from /api/import-logs
+
+- Shows table of import summaries
+
+- Clickable "Failed" column shows failed job details
+
+🔁 Flow Diagram
+
+[ XML Feed ]
+     ↓
+[ fetchJobs.js ] → parses XML → pushes jobs to queue
+     ↓
+[ Redis Queue (BullMQ) ]
+     ↓
+[ worker.js ] → upsert into MongoDB
+     ↓
+[ import_logs ] ← success/failure summary
+     ↓
+[ Frontend ] → shows import history via API
+
+
+🧠 Design Considerations
+Queue-based system avoids blocking fetcher
+
+Mongo + Mongoose handles validation
+
+Frontend is decoupled using REST API
+
+Redis and BullMQ allow retry/backoff and scaling easily

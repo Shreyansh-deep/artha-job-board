@@ -14,7 +14,7 @@ const parseXML = async (url) => {
 };
 
 const fetchAndImportJobs = async () => {
-  await connectDB(); // ensure DB connection
+  await connectDB(); 
   const urls = [
     "https://jobicy.com/?feed=job_feed&job_categories=data-science",
     "https://www.higheredjobs.com/rss/articleFeed.cfm"

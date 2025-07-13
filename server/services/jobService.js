@@ -6,21 +6,19 @@ const importJobs = async (jobList) => {
   let failedJobs = [];
 
   for (const job of jobList) {
-    // Extract guid value safely
+    
     const guidValue =
       typeof job.guid?.[0] === "string"
         ? job.guid[0]
         : job.guid?.[0]?._ || "unknown";
 
     try {
-      // Clean up fields from arrays → strings
       const cleanedJob = {
         guid: guidValue,
         title: job.title?.[0] || "",
         link: job.link?.[0] || "",
         description: job.description?.[0] || "",
         pubDate: job.pubDate?.[0] || "",
-        // Add more fields if needed
       };
 
       const existing = await Job.findOne({ guid: guidValue });
